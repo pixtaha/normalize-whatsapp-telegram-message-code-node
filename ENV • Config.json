@@ -1,0 +1,39 @@
+const ENV = 'dev';
+
+const CONFIG = {
+  dev: {
+    tgToken: 'YOUR-TELEGRAM-ACCESS-TOKEN-DEV-BOT',
+    numbersTable: '---'
+  },
+  prod: {
+    tgToken: 'YOUR-TELEGRAM-ACCESS-TOKEN-PROD-BOT',
+    numbersTable: '---'
+  }
+};
+
+if (!CONFIG[ENV]) {
+  throw new Error(`Invalid ENV: ${ENV}`);
+}
+
+// جيب داتا التريجر الشغال
+let triggerData = null;
+
+try {
+  const tg = $('TG • Trigger!').first()?.json;
+  if (tg) triggerData = tg;
+} catch(_) {}
+
+if (!triggerData) {
+  try {
+    const wa = $('WA • Trigger!').first()?.json;
+    if (wa) triggerData = wa;
+  } catch(_) {}
+}
+
+return [{
+  json: {
+    env: ENV,
+    ...CONFIG[ENV],
+    triggerData
+  }
+}];
